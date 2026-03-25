@@ -2,55 +2,26 @@ from pathlib import Path
 import os
 import math
 import random
+import json
 
 import openpyxl
-import json
 
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
-from pathlib import Path
-from reportlab.pdfbase import pdfmetrics
-from reportlab.pdfbase.ttfonts import TTFont
 
 BASE_DIR = Path(__file__).resolve().parent
 FONT_PATH = BASE_DIR / "fonts" / "DejaVuSans.ttf"
 
 FONT_NAME = "Helvetica"
 
+print("DEBUG FONT PATH:", FONT_PATH)
+print("DEBUG FONT EXISTS:", FONT_PATH.exists())
+
 if FONT_PATH.exists():
     FONT_NAME = "DejaVuSans"
     pdfmetrics.registerFont(TTFont(FONT_NAME, str(FONT_PATH)))
-
-BASE_DIR = Path(__file__).resolve().parent
-
-def find_cyrillic_font_path():
-    possible_paths = [
-        BASE_DIR / "fonts" / "DejaVuSans.ttf",
-        BASE_DIR / "DejaVuSans.ttf",
-        Path("./DejaVuSans.ttf"),
-        Path("/Library/Fonts/Arial Unicode.ttf"),
-        Path("/Library/Fonts/Arial Unicode MS.ttf"),
-        Path("/Library/Fonts/Arial.ttf"),
-        Path("/System/Library/Fonts/Supplemental/Arial.ttf"),
-        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
-    ]
-
-    for path in possible_paths:
-        if Path(path).exists():
-            return str(path)
-
-    return None
-
-
-FONT_NAME = "Helvetica"
-font_path = find_cyrillic_font_path()
-if font_path:
-    FONT_NAME = "CyrillicFont"
-    pdfmetrics.registerFont(TTFont(FONT_NAME, font_path))
-
-
 
 YES_THRESHOLD = 0.10
 NO_THRESHOLD = -0.10
