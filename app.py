@@ -243,12 +243,12 @@ if st.button("Пусни гласуване"):
 
     ax.set_xticks([])
     ax.set_yticks([])
-    ax.set_title("65 народни представители")
+    ax.set_title("Гласуване по Места във Върховния Конгрес")
     ax.set_frame_on(False)
 
     st.pyplot(fig)
 
-    st.subheader("Доклад")
+    st.subheader("Доклад за гласуване във Върховния Конгрес")
 
     generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
 
