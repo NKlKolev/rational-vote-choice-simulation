@@ -5,7 +5,7 @@ from engine import find_workbook_path, load_bots_from_excel, load_json
 
 st.set_page_config(page_title="Pustinyakovo Voting", layout="wide")
 
-st.title("Симулация на парламентарно гласуване")
+st.title("Гласуване на Върховния Конгрес на Република Пустиняково")
 
 workbook_path = find_workbook_path()
 if workbook_path:
@@ -13,11 +13,11 @@ if workbook_path:
     st.success(f"Заредени народни представители от Excel: {workbook_path}")
 else:
     bots = load_json("data/bots.json")
-    st.warning("Заредени народни представители от JSON: data/bots.json")
+    st.warning("Заредени членове на Върховния Конгрес от JSON: data/bots.json")
 
-st.write(f"Общ брой народни представители: {len(bots)}")
+st.write(f"Общ брой членове на Върховния Конгрес: {len(bots)}")
 
-with st.expander("Покажи заредените народни представители"):
+with st.expander("Покажи заредените членове на Върховния Конгрес"):
     for bot in bots:
         st.write(f"{bot['name']} ({bot['party']})")
 
