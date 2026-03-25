@@ -394,7 +394,24 @@ def score_bot(bot, proposal):
     if abs(relation_score) >= 0.60:
         yes_threshold -= 0.01
         no_threshold += 0.01
-
+        
+    if party_pressure <= -0.9 and discipline >= 0.65:
+    vote = "NO"
+    reasons = ["партията твърдо се противопоставя на предложението"]
+    return {
+        "name": bot["name"],
+        "party": bot["party"],
+        "vote": vote,
+        "score": round(total_score, 3),
+        "reason": "; ".join(reasons),
+        "party_pressure": round(party_pressure, 3),
+        "ideology_score": round(ideology_score, 3),
+        "salience_score": round(salience_score, 3),
+        "relation_score": round(relation_score, 3),
+        "randomness": round(randomness, 3),
+        "yes_threshold": round(yes_threshold, 3),
+        "no_threshold": round(no_threshold, 3)
+    }
     if total_score >= yes_threshold:
         vote = "YES"
     elif total_score <= no_threshold:
