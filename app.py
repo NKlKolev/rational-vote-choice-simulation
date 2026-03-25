@@ -190,7 +190,8 @@ if st.button("Пусни гласуване"):
         st.write(
             f"{party}: ЗА={votes['YES']} | ПРОТИВ={votes['NO']} | ВЪЗДЪРЖАЛ СЕ={votes['ABSTAIN']}"
         )
-            st.subheader("Гласуване по народни представители")
+
+    st.subheader("Гласуване по народни представители")
 
     vote_labels = {
         "YES": "ЗА",
