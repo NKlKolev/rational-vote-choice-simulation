@@ -1,4 +1,12 @@
-from engine import run_vote, count_votes, count_votes_by_party
+from engine import (
+    run_vote,
+    count_votes,
+    count_votes_by_party,
+    find_workbook_path,
+    load_bots_from_excel,
+    load_json,
+    generate_pdf_report,
+)
 import streamlit as st
 
 from engine import find_workbook_path, load_bots_from_excel, load_json
@@ -181,4 +189,41 @@ if st.button("Пусни гласуване"):
     for party, votes in party_totals.items():
         st.write(
             f"{party}: ЗА={votes['YES']} | ПРОТИВ={votes['NO']} | ВЪЗДЪРЖАЛ СЕ={votes['ABSTAIN']}"
+        )
+            st.subheader("Гласуване по народни представители")
+
+    vote_labels = {
+        "YES": "ЗА",
+        "NO": "ПРОТИВ",
+        "ABSTAIN": "ВЪЗДЪРЖАЛ СЕ"
+    }
+
+    member_rows = []
+    for result in results:
+        member_rows.append({
+            "Име": result["name"],
+            "Партия": result["party"],
+            "Вот": vote_labels.get(result["vote"], result["vote"]),
+            "Резултат": result["score"],
+            "Партиен натиск": result.get("party_pressure", 0.0),
+            "Идеология": result.get("ideology_score", 0.0),
+            "Значимост": result.get("salience_score", 0.0),
+            "Отношения": result.get("relation_score", 0.0),
+            "Шум": result.get("randomness", 0.0),
+            "Обяснение": result["reason"],
+        })
+
+    st.dataframe(member_rows, use_container_width=True)
+
+    st.subheader("Доклад")
+
+    bill_passed = totals["YES"] >= 33
+    generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
+
+    with open("parliament_report.pdf", "rb") as pdf_file:
+        st.download_button(
+            label="Изтегли PDF доклада",
+            data=pdf_file,
+            file_name="parliament_report.pdf",
+            mime="application/pdf"
         )
