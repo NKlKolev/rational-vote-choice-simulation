@@ -12,20 +12,23 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
 
 
+BASE_DIR = Path(__file__).resolve().parent
+
 def find_cyrillic_font_path():
     possible_paths = [
-        "DejaVuSans.ttf",
-        "./DejaVuSans.ttf",
-        "/Library/Fonts/Arial Unicode.ttf",
-        "/Library/Fonts/Arial Unicode MS.ttf",
-        "/Library/Fonts/Arial.ttf",
-        "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        BASE_DIR / "fonts" / "DejaVuSans.ttf",
+        BASE_DIR / "DejaVuSans.ttf",
+        Path("./DejaVuSans.ttf"),
+        Path("/Library/Fonts/Arial Unicode.ttf"),
+        Path("/Library/Fonts/Arial Unicode MS.ttf"),
+        Path("/Library/Fonts/Arial.ttf"),
+        Path("/System/Library/Fonts/Supplemental/Arial.ttf"),
+        Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"),
     ]
 
     for path in possible_paths:
-        if os.path.exists(path):
-            return path
+        if Path(path).exists():
+            return str(path)
 
     return None
 
