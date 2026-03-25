@@ -778,44 +778,7 @@ if __name__ == "__main__":
         print("\nГласуване по партии:")
         for party, counts in party_totals.items():
             print(f"{party}: ЗА={counts['YES']} | ПРОТИВ={counts['NO']} | ВЪЗДЪРЖАЛ СЕ={counts['ABSTAIN']}")
-        st.subheader("Визуализация на гласуването")
-        vote_colors = {
-    "YES": "green",
-    "NO": "red",
-    "ABSTAIN": "gray"
-}
 
-votes = [result["vote"] for result in results]
-colors = [vote_colors.get(vote, "gray") for vote in votes]
-
-n_cols = 13
-n_rows = 5
-
-x = []
-y = []
-
-for i in range(len(votes)):
-    col = i % n_cols
-    row = i // n_cols
-    x.append(col)
-    y.append(-row)
-
-fig, ax = plt.subplots(figsize=(10, 4))
-ax.scatter(x, y, s=500, c=colors, edgecolors="black")
-
-for i, result in enumerate(results):
-    ax.text(x[i], y[i], str(i + 1), ha="center", va="center", fontsize=8)
-
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_title("65 народни представители")
-ax.set_frame_on(False)
-
-st.pyplot(fig)
-        if bill_passed:
-            print("\nКраен резултат: ПРИЕТО")
-        else:
-            print("\nКраен резултат: НЕ Е ПРИЕТО")
 
         generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
         print("\nPDF докладът е създаден: parliament_report.pdf")
