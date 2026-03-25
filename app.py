@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+import streamlit as st
+
 from engine import (
     run_vote,
     count_votes,
@@ -8,9 +10,6 @@ from engine import (
     load_json,
     generate_pdf_report,
 )
-import streamlit as st
-
-from engine import find_workbook_path, load_bots_from_excel, load_json
 
 st.set_page_config(page_title="Pustinyakovo Voting", layout="wide")
 
@@ -139,7 +138,6 @@ for i, party in enumerate(party_names):
 st.divider()
 
 if st.button("Пусни гласуване"):
-    # Build proposal
     proposal = {
         "title": title,
         "bill_id": bill_id,
@@ -170,18 +168,17 @@ if st.button("Пусни гласуване"):
             "urgency": urgency
         }
 
-    # Run vote
     results = run_vote(bots, proposal)
     totals = count_votes(results)
     party_totals = count_votes_by_party(results)
+    bill_passed = totals["YES"] >= 33
 
     st.subheader("Резултат")
-
     st.write(f"ЗА: {totals['YES']}")
     st.write(f"ПРОТИВ: {totals['NO']}")
     st.write(f"ВЪЗДЪРЖАЛ СЕ: {totals['ABSTAIN']}")
 
-    if totals["YES"] >= 33:
+    if bill_passed:
         st.success("Законопроектът е ПРИЕТ")
     else:
         st.error("Законопроектът НЕ Е ПРИЕТ")
@@ -216,47 +213,43 @@ if st.button("Пусни гласуване"):
         })
 
     st.dataframe(member_rows, use_container_width=True)
-            st.subheader("Визуализация на гласуването")
-        vote_colors = {
-    "YES": "green",
-    "NO": "red",
-    "ABSTAIN": "gray"
-}
 
-votes = [result["vote"] for result in results]
-colors = [vote_colors.get(vote, "gray") for vote in votes]
+    st.subheader("Визуализация на гласуването")
 
-n_cols = 13
-n_rows = 5
+    vote_colors = {
+        "YES": "green",
+        "NO": "red",
+        "ABSTAIN": "gray"
+    }
 
-x = []
-y = []
+    votes = [result["vote"] for result in results]
+    colors = [vote_colors.get(vote, "gray") for vote in votes]
 
-for i in range(len(votes)):
-    col = i % n_cols
-    row = i // n_cols
-    x.append(col)
-    y.append(-row)
+    n_cols = 13
+    x = []
+    y = []
 
-fig, ax = plt.subplots(figsize=(10, 4))
-ax.scatter(x, y, s=500, c=colors, edgecolors="black")
+    for i in range(len(votes)):
+        col = i % n_cols
+        row = i // n_cols
+        x.append(col)
+        y.append(-row)
 
-for i, result in enumerate(results):
-    ax.text(x[i], y[i], str(i + 1), ha="center", va="center", fontsize=8)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.scatter(x, y, s=500, c=colors, edgecolors="black")
 
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_title("65 народни представители")
-ax.set_frame_on(False)
+    for i, result in enumerate(results):
+        ax.text(x[i], y[i], str(i + 1), ha="center", va="center", fontsize=8)
 
-st.pyplot(fig)
-        if bill_passed:
-            print("\nКраен резултат: ПРИЕТО")
-        else:
-            print("\nКраен резултат: НЕ Е ПРИЕТО")
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title("65 народни представители")
+    ax.set_frame_on(False)
+
+    st.pyplot(fig)
+
     st.subheader("Доклад")
 
-    bill_passed = totals["YES"] >= 33
     generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
 
     with open("parliament_report.pdf", "rb") as pdf_file:
