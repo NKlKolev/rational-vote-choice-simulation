@@ -10,7 +10,18 @@ from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet
+from pathlib import Path
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
+BASE_DIR = Path(__file__).resolve().parent
+FONT_PATH = BASE_DIR / "fonts" / "DejaVuSans.ttf"
+
+FONT_NAME = "Helvetica"
+
+if FONT_PATH.exists():
+    FONT_NAME = "DejaVuSans"
+    pdfmetrics.registerFont(TTFont(FONT_NAME, str(FONT_PATH)))
 
 BASE_DIR = Path(__file__).resolve().parent
 
