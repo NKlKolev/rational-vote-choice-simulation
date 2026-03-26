@@ -5,7 +5,7 @@ import random
 import json
 import matplotlib.pyplot as plt
 import openpyxl
-
+import time  
 from reportlab.pdfbase import pdfmetrics
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
@@ -518,7 +518,7 @@ def run_vote(bots, proposal):
 def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33, progress_callback=None):
     simulations = []
 
-       for i in range(n_runs):
+    for i in range(n_runs):
         results = run_vote(bots, proposal)
         totals = count_votes(results)
         party_totals = count_votes_by_party(results)
@@ -532,8 +532,9 @@ def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33, progr
         })
 
         if progress_callback:
-            displayed_step = min(65, int(((i + 1) / n_runs) * 65))
+            displayed_step = min(65, max(1, int(((i + 1) / n_runs) * 65)))
             progress_callback(displayed_step, 65)
+            time.sleep(0.03)
 
     # Split simulations into PASS / FAIL groups
     passed_runs = [sim for sim in simulations if sim["bill_passed"]]
