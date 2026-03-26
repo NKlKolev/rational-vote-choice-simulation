@@ -189,18 +189,60 @@ def score_bot(bot, proposal):
     effects = proposal.get("effects", {})
     ideology = bot.get("ideology", {})
     salience = bot.get("salience", {})
-    if proposal_type == "pm_election":
+        if proposal_type == "pm_election":
         party = canonical_party_name(bot.get("party", ""))
         candidate_party = canonical_party_name(proposal.get("candidate_party", ""))
         relation_score = get_party_relation(party, candidate_party)
         discipline = bot.get("discipline", 0.5)
         rebellion = bot.get("rebellion", 0.2)
 
+        party_positions = proposal.get("party_positions", {})
+        normalized_party_positions = {
+            normalize(str(key)): value for key, value in party_positions.items()
+        }
+        party_pressure = normalized_party_positions.get(normalize(str(party)), 0.0)
+
         yes_threshold = YES_THRESHOLD
         no_threshold = NO_THRESHOLD
 
+        # Hard party-line override for PM election
+        if party_pressure >= 0.9 and discipline >= 0.65:
+            vote = "YES"
+            reason = "партията твърдо подкрепя кандидата за министър-председател"
+            return {
+                "name": bot["name"],
+                "party": bot["party"],
+                "score": 1.0,
+                "vote": vote,
+                "reason": reason,
+                "party_pressure": round(party_pressure, 3),
+                "ideology_score": 0.0,
+                "salience_score": 0.0,
+                "relation_score": round(relation_score, 3),
+                "randomness": 0.0,
+                "yes_threshold": round(yes_threshold, 3),
+                "no_threshold": round(no_threshold, 3)
+            }
+
+        if party_pressure <= -0.9 and discipline >= 0.65:
+            vote = "NO"
+            reason = "партията твърдо се противопоставя на кандидата за министър-председател"
+            return {
+                "name": bot["name"],
+                "party": bot["party"],
+                "score": -1.0,
+                "vote": vote,
+                "reason": reason,
+                "party_pressure": round(party_pressure, 3),
+                "ideology_score": 0.0,
+                "salience_score": 0.0,
+                "relation_score": round(relation_score, 3),
+                "randomness": 0.0,
+                "yes_threshold": round(yes_threshold, 3),
+                "no_threshold": round(no_threshold, 3)
+            }
+
         if normalize(str(party)) == normalize(str(candidate_party)):
-            # Own-party support is still strong, but rebellious MPs can wobble a little.
             base_score = 0.98
             random_scale = 0.02 + rebellion * 0.05
             randomness = random.uniform(-random_scale, random_scale) * (1.0 - discipline * 0.3)
@@ -215,7 +257,6 @@ def score_bot(bot, proposal):
         else:
             base_score = relation_score * (0.75 + discipline * 0.25)
 
-            # Stronger unpredictability in PM elections, especially for rebellious MPs.
             random_scale = 0.10 + rebellion * 0.25
             if abs(relation_score) <= 0.25:
                 random_scale += 0.08
@@ -242,7 +283,7 @@ def score_bot(bot, proposal):
             "score": round(score, 3),
             "vote": vote,
             "reason": reason,
-            "party_pressure": 0.0,
+            "party_pressure": round(party_pressure, 3),
             "ideology_score": 0.0,
             "salience_score": 0.0,
             "relation_score": round(relation_score, 3),
