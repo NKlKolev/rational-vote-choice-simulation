@@ -165,112 +165,113 @@ if st.button("Пусни гласуване"):
             "international_alignment": international_alignment,
             "urgency": urgency
         }
-progress_text = st.empty()
-progress_bar = st.progress(0)
 
-def update_progress(current_step, total_steps):
-    progress_text.write(f"Гласуване... {current_step}/{total_steps}")
-    progress_bar.progress(current_step / total_steps)
+    progress_text = st.empty()
+    progress_bar = st.progress(0)
 
-simulation_output = get_representative_vote(
-    bots,
-    proposal,
-    n_runs=100,
-    pass_threshold=33,
-    progress_callback=update_progress
-)
+    def update_progress(current_step, total_steps):
+        progress_text.write(f"Гласуване... {current_step}/{total_steps}")
+        progress_bar.progress(current_step / total_steps)
 
-results = simulation_output["results"]
-totals = simulation_output["totals"]
-party_totals = simulation_output["party_totals"]
-bill_passed = simulation_output["bill_passed"]
-
-progress_text.write("Гласуването приключи: 65/65")
-progress_bar.progress(1.0)
-
-st.subheader("Резултат")
-st.write(f"ЗА: {totals['YES']}")
-st.write(f"ПРОТИВ: {totals['NO']}")
-st.write(f"ВЪЗДЪРЖАЛ СЕ: {totals['ABSTAIN']}")
-
-if bill_passed:
-    st.success("Законопроектът е ПРИЕТ")
-else:
-    st.error("Законопроектът НЕ Е ПРИЕТ")
-
-st.subheader("Гласуване по партии")
-for party, votes in party_totals.items():
-    st.write(
-        f"{party}: ЗА={votes['YES']} | ПРОТИВ={votes['NO']} | ВЪЗДЪРЖАЛ СЕ={votes['ABSTAIN']}"
+    simulation_output = get_representative_vote(
+        bots,
+        proposal,
+        n_runs=100,
+        pass_threshold=33,
+        progress_callback=update_progress
     )
 
-st.subheader("Гласуване по народни представители")
+    results = simulation_output["results"]
+    totals = simulation_output["totals"]
+    party_totals = simulation_output["party_totals"]
+    bill_passed = simulation_output["bill_passed"]
 
-vote_labels = {
-    "YES": "ЗА",
-    "NO": "ПРОТИВ",
-    "ABSTAIN": "ВЪЗДЪРЖАЛ СЕ"
-}
+    progress_text.write("Гласуването приключи: 65/65")
+    progress_bar.progress(1.0)
 
-member_rows = []
-for result in results:
-    member_rows.append({
-        "Име": result["name"],
-        "Партия": result["party"],
-        "Вот": vote_labels.get(result["vote"], result["vote"]),
-        "Резултат": result["score"],
-        "Партиен натиск": result.get("party_pressure", 0.0),
-        "Идеология": result.get("ideology_score", 0.0),
-        "Значимост": result.get("salience_score", 0.0),
-        "Отношения": result.get("relation_score", 0.0),
-        "Шум": result.get("randomness", 0.0),
-        "Обяснение": result["reason"],
-    })
+    st.subheader("Резултат")
+    st.write(f"ЗА: {totals['YES']}")
+    st.write(f"ПРОТИВ: {totals['NO']}")
+    st.write(f"ВЪЗДЪРЖАЛ СЕ: {totals['ABSTAIN']}")
 
-st.dataframe(member_rows, use_container_width=True)
+    if bill_passed:
+        st.success("Законопроектът е ПРИЕТ")
+    else:
+        st.error("Законопроектът НЕ Е ПРИЕТ")
 
-st.subheader("Визуализация на гласуването")
+    st.subheader("Гласуване по партии")
+    for party, votes in party_totals.items():
+        st.write(
+            f"{party}: ЗА={votes['YES']} | ПРОТИВ={votes['NO']} | ВЪЗДЪРЖАЛ СЕ={votes['ABSTAIN']}"
+        )
 
-vote_colors = {
-    "YES": "green",
-    "NO": "red",
-    "ABSTAIN": "gray"
-}
+    st.subheader("Гласуване по народни представители")
 
-votes = [result["vote"] for result in results]
-colors = [vote_colors.get(vote, "gray") for vote in votes]
+    vote_labels = {
+        "YES": "ЗА",
+        "NO": "ПРОТИВ",
+        "ABSTAIN": "ВЪЗДЪРЖАЛ СЕ"
+    }
 
-n_cols = 13
-x = []
-y = []
+    member_rows = []
+    for result in results:
+        member_rows.append({
+            "Име": result["name"],
+            "Партия": result["party"],
+            "Вот": vote_labels.get(result["vote"], result["vote"]),
+            "Резултат": result["score"],
+            "Партиен натиск": result.get("party_pressure", 0.0),
+            "Идеология": result.get("ideology_score", 0.0),
+            "Значимост": result.get("salience_score", 0.0),
+            "Отношения": result.get("relation_score", 0.0),
+            "Шум": result.get("randomness", 0.0),
+            "Обяснение": result["reason"],
+        })
 
-for i in range(len(votes)):
-    col = i % n_cols
-    row = i // n_cols
-    x.append(col)
-    y.append(-row)
+    st.dataframe(member_rows, use_container_width=True)
 
-fig, ax = plt.subplots(figsize=(10, 4))
-ax.scatter(x, y, s=500, c=colors, edgecolors="black")
+    st.subheader("Визуализация на гласуването")
 
-for i, result in enumerate(results):
-    ax.text(x[i], y[i], str(i + 1), ha="center", va="center", fontsize=8)
+    vote_colors = {
+        "YES": "green",
+        "NO": "red",
+        "ABSTAIN": "gray"
+    }
 
-ax.set_xticks([])
-ax.set_yticks([])
-ax.set_title("Гласуване по Места във Върховния Конгрес")
-ax.set_frame_on(False)
+    votes = [result["vote"] for result in results]
+    colors = [vote_colors.get(vote, "gray") for vote in votes]
 
-st.pyplot(fig)
+    n_cols = 13
+    x = []
+    y = []
 
-st.subheader("Доклад за гласуване във Върховния Конгрес")
+    for i in range(len(votes)):
+        col = i % n_cols
+        row = i // n_cols
+        x.append(col)
+        y.append(-row)
 
-generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    ax.scatter(x, y, s=500, c=colors, edgecolors="black")
 
-with open("parliament_report.pdf", "rb") as pdf_file:
-    st.download_button(
-        label="Изтегли PDF доклада",
-        data=pdf_file,
-        file_name="parliament_report.pdf",
-        mime="application/pdf"
-    )
+    for i, result in enumerate(results):
+        ax.text(x[i], y[i], str(i + 1), ha="center", va="center", fontsize=8)
+
+    ax.set_xticks([])
+    ax.set_yticks([])
+    ax.set_title("Гласуване по Места във Върховния Конгрес")
+    ax.set_frame_on(False)
+
+    st.pyplot(fig)
+
+    st.subheader("Доклад за гласуване във Върховния Конгрес")
+
+    generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
+
+    with open("parliament_report.pdf", "rb") as pdf_file:
+        st.download_button(
+            label="Изтегли PDF доклада",
+            data=pdf_file,
+            file_name="parliament_report.pdf",
+            mime="application/pdf"
+        )
