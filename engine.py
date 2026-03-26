@@ -842,7 +842,7 @@ if __name__ == "__main__":
         proposals_to_run = proposals
 
     for proposal in proposals_to_run:
-        simulation_output = get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33)
+        simulation_output = get_representative_vote(bots, proposal, n_runs=200, pass_threshold=33)
         results = simulation_output["results"]
         totals = simulation_output["totals"]
         party_totals = simulation_output["party_totals"]
