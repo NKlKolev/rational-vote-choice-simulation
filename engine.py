@@ -695,9 +695,9 @@ def generate_pdf_report(proposal, results, totals, party_totals, bill_passed):
     content.append(Paragraph(f"Международно измерение: {proposal.get('effects', {}).get('international_alignment', 0)}", styles["Normal"]))
     content.append(Paragraph(f"Спешност: {proposal.get('effects', {}).get('urgency', 0)}", styles["Normal"]))
     content.append(Spacer(1, 10))
-    content.append(Paragraph("<b>Позиции на партиите:</b>", styles["Heading3"]))
-    for party, value in proposal.get("party_positions", {}).items():
-        content.append(Paragraph(f"{party}: {value}", styles["Normal"]))
+    #content.append(Paragraph("<b>Позиции на партиите:</b>", styles["Heading3"]))  #this puts the party positions within the report, they are temporarily removed!
+    #for party, value in proposal.get("party_positions", {}).items():
+        #content.append(Paragraph(f"{party}: {value}", styles["Normal"]))
 
     if proposal.get("proposed_by_party"):
         content.append(Spacer(1, 10))
