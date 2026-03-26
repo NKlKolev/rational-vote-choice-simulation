@@ -206,21 +206,21 @@ def score_bot(bot, proposal):
         yes_threshold = YES_THRESHOLD
         no_threshold = NO_THRESHOLD
 
-        # Hard party-line override for PM election
-       if party_pressure <= -0.95:
+               # Hard party-line override for PM election
+        if party_pressure <= -0.95:
             loyalty_chance = 0.55 + discipline * 0.2
 
-             if random.random() < loyalty_chance:
+            if random.random() < loyalty_chance:
                 vote = "NO"
                 reason = "партията силно се противопоставя на кандидата"
             else:
                 vote = "ABSTAIN" if random.random() < 0.8 else "YES"
                 reason = "вътрешно отклонение от партийната линия"
-                
+
             return {
                 "name": bot["name"],
                 "party": bot["party"],
-                "score": 1.0,
+                "score": -1.0,
                 "vote": vote,
                 "reason": reason,
                 "party_pressure": round(party_pressure, 3),
