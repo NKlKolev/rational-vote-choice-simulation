@@ -2,9 +2,7 @@ import matplotlib.pyplot as plt
 import streamlit as st
 
 from engine import (
-    run_vote,
-    count_votes,
-    count_votes_by_party,
+    get_representative_vote,
     find_workbook_path,
     load_bots_from_excel,
     load_json,
@@ -168,10 +166,11 @@ if st.button("Пусни гласуване"):
             "urgency": urgency
         }
 
-    results = run_vote(bots, proposal)
-    totals = count_votes(results)
-    party_totals = count_votes_by_party(results)
-    bill_passed = totals["YES"] >= 33
+    simulation_output = get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33)
+    results = simulation_output["results"]
+    totals = simulation_output["totals"]
+    party_totals = simulation_output["party_totals"]
+    bill_passed = simulation_output["bill_passed"]
 
     st.subheader("Резултат")
     st.write(f"ЗА: {totals['YES']}")
