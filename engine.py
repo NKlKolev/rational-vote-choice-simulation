@@ -515,7 +515,85 @@ def run_vote(bots, proposal):
         results.append(result)
 
     return results
+def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33):
+    simulations = []
 
+    for _ in range(n_runs):
+        results = run_vote(bots, proposal)
+        totals = count_votes(results)
+        party_totals = count_votes_by_party(results)
+        bill_passed = totals["YES"] >= pass_threshold
+
+        simulations.append({
+            "results": results,
+            "totals": totals,
+            "party_totals": party_totals,
+            "bill_passed": bill_passed,
+        })
+
+    # Split simulations into PASS / FAIL groups
+    passed_runs = [sim for sim in simulations if sim["bill_passed"]]
+    failed_runs = [sim for sim in simulations if not sim["bill_passed"]]
+
+    # Choose the dominant class
+    if len(passed_runs) >= len(failed_runs):
+        dominant_runs = passed_runs if passed_runs else simulations
+        dominant_outcome = "PASS"
+    else:
+        dominant_runs = failed_runs if failed_runs else simulations
+        dominant_outcome = "FAIL"
+
+    # Compute average totals within the dominant class
+    avg_yes = sum(sim["totals"]["YES"] for sim in dominant_runs) / len(dominant_runs)
+    avg_no = sum(sim["totals"]["NO"] for sim in dominant_runs) / len(dominant_runs)
+    avg_abstain = sum(sim["totals"]["ABSTAIN"] for sim in dominant_runs) / len(dominant_runs)
+
+    # Find the single run closest to those averages
+    def distance(sim):
+        return (
+            abs(sim["totals"]["YES"] - avg_yes)
+            + abs(sim["totals"]["NO"] - avg_no)
+            + abs(sim["totals"]["ABSTAIN"] - avg_abstain)
+        )
+
+    representative = min(dominant_runs, key=distance)
+
+    # Average party totals within dominant class
+    average_party_totals = {}
+    all_parties = set()
+    for sim in dominant_runs:
+        all_parties.update(sim["party_totals"].keys())
+
+    for party in all_parties:
+        yes_avg = sum(sim["party_totals"].get(party, {}).get("YES", 0) for sim in dominant_runs) / len(dominant_runs)
+        no_avg = sum(sim["party_totals"].get(party, {}).get("NO", 0) for sim in dominant_runs) / len(dominant_runs)
+        abstain_avg = sum(sim["party_totals"].get(party, {}).get("ABSTAIN", 0) for sim in dominant_runs) / len(dominant_runs)
+
+        average_party_totals[party] = {
+            "YES": round(yes_avg, 2),
+            "NO": round(no_avg, 2),
+            "ABSTAIN": round(abstain_avg, 2),
+        }
+
+    return {
+        "results": representative["results"],
+        "totals": representative["totals"],
+        "party_totals": representative["party_totals"],
+        "bill_passed": representative["bill_passed"],
+        "meta": {
+            "n_runs": n_runs,
+            "pass_probability": round(len(passed_runs) / n_runs, 3),
+            "fail_probability": round(len(failed_runs) / n_runs, 3),
+            "dominant_outcome": dominant_outcome,
+            "dominant_runs": len(dominant_runs),
+            "average_totals_in_dominant_class": {
+                "YES": round(avg_yes, 2),
+                "NO": round(avg_no, 2),
+                "ABSTAIN": round(avg_abstain, 2),
+            },
+            "average_party_totals_in_dominant_class": average_party_totals,
+        }
+    }
 def generate_pdf_report(proposal, results, totals, party_totals, bill_passed):
     doc = SimpleDocTemplate("parliament_report.pdf")
     styles = getSampleStyleSheet()
@@ -759,10 +837,11 @@ if __name__ == "__main__":
         proposals_to_run = proposals
 
     for proposal in proposals_to_run:
-        results = run_vote(bots, proposal)
-        totals = count_votes(results)
-        party_totals = count_votes_by_party(results)
-        bill_passed = totals["YES"] >= 33
+        simulation_output = get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33)
+        results = simulation_output["results"]
+        totals = simulation_output["totals"]
+        party_totals = simulation_output["party_totals"]
+        bill_passed = simulation_output["bill_passed"]
 
         print(f"\nПредложение: {proposal['title']}")
         print(f"ID на законопроекта: {proposal.get('bill_id', 'Няма ID')}")
