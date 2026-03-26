@@ -189,7 +189,8 @@ def score_bot(bot, proposal):
     effects = proposal.get("effects", {})
     ideology = bot.get("ideology", {})
     salience = bot.get("salience", {})
-        if proposal_type == "pm_election":
+
+    if proposal_type == "pm_election":
         party = canonical_party_name(bot.get("party", ""))
         candidate_party = canonical_party_name(proposal.get("candidate_party", ""))
         relation_score = get_party_relation(party, candidate_party)
@@ -241,7 +242,6 @@ def score_bot(bot, proposal):
                 "yes_threshold": round(yes_threshold, 3),
                 "no_threshold": round(no_threshold, 3)
             }
-
         if normalize(str(party)) == normalize(str(candidate_party)):
             base_score = 0.98
             random_scale = 0.02 + rebellion * 0.05
