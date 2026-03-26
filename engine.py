@@ -515,10 +515,10 @@ def run_vote(bots, proposal):
         results.append(result)
 
     return results
-def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33):
+def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33, progress_callback=None):
     simulations = []
 
-    for _ in range(n_runs):
+       for i in range(n_runs):
         results = run_vote(bots, proposal)
         totals = count_votes(results)
         party_totals = count_votes_by_party(results)
@@ -530,6 +530,10 @@ def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33):
             "party_totals": party_totals,
             "bill_passed": bill_passed,
         })
+
+        if progress_callback:
+            displayed_step = min(65, int(((i + 1) / n_runs) * 65))
+            progress_callback(displayed_step, 65)
 
     # Split simulations into PASS / FAIL groups
     passed_runs = [sim for sim in simulations if sim["bill_passed"]]
