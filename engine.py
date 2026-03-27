@@ -611,7 +611,7 @@ def score_bot(bot, proposal):
     coalition_bonus = 0.0
 
     if proposed_by_party:
-        relation_score = get_party_relation(party_name, proposed_by_party)
+        relation_score = get_party_relation(party, proposed_by_party)
 
         # Coalition dynamics at MP level
         if relation_score >= 0.4:
