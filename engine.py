@@ -434,7 +434,15 @@ def calculate_single_party_position(party_name, proposal):
     # Pull uncertain positions toward the center
     stance += (-stance) * compromise * uncertainty * 0.40
 
+    # 7. Proposer floor:
+    # if a party officially proposes the bill, it should strongly support it
+    proposed_by_party = proposal.get("proposed_by_party")
+    if proposed_by_party:
+        if canonical_party_name(party_name) == canonical_party_name(proposed_by_party):
+            stance = max(stance, 0.8)
+
     return clamp(stance, -1.0, 1.0)
+    
 def calculate_party_positions(proposal):
     positions = {}
 
