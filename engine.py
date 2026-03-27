@@ -682,7 +682,6 @@ def score_bot(bot, proposal):
             + coalition_bonus
             + randomness
         )
-    )
 
     # --- NON-RATIONAL LAYERS ---
 
