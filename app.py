@@ -3,6 +3,7 @@ import streamlit as st
 
 from engine import (
     get_representative_vote,
+    calculate_party_positions,
     find_workbook_path,
     load_bots_from_excel,
     load_json,
@@ -121,17 +122,7 @@ if proposal_type == "policy":
         )
 
 st.subheader("Позиции на партиите")
-
-party_positions = {}
-party_cols = st.columns(min(3, len(party_names)) if party_names else 1)
-
-for i, party in enumerate(party_names):
-    with party_cols[i % len(party_cols)]:
-        party_positions[party] = st.slider(
-            party,
-            -1.0, 1.0, 0.0, 0.05,
-            key=f"party_{party}"
-        )
+st.caption("Партийните позиции ще бъдат изчислени автоматично от системата.")
 
 st.divider()
 
@@ -145,7 +136,6 @@ if st.button("Пусни гласуване"):
         "proposed_by_party": proposed_by_party,
         "candidate_party": candidate_party,
         "effects": {},
-        "party_positions": party_positions
     }
 
     if proposal_type == "policy":
@@ -172,7 +162,14 @@ if st.button("Пусни гласуване"):
     def update_progress(current_step, total_steps):
         progress_text.write(f"Гласуване... {current_step}/{total_steps}")
         progress_bar.progress(current_step / total_steps)
+   
+    auto_positions = calculate_party_positions(proposal)
+    proposal["party_positions"] = auto_positions
 
+    st.subheader("Автоматично изчислени партийни позиции")
+    for party, position in auto_positions.items():
+        st.write(f"{party}: {position}")
+    
     simulation_output = get_representative_vote(
         bots,
         proposal,
