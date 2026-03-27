@@ -141,7 +141,7 @@ PARTY_RELATIONS = {
     },
     "ПКП-НН": {
         "ГЕРП": 0.50,
-        "ДПС": -0.85,
+        "ДПС": -0.95,
         "Демократично Пустиняково": -0.90,
         "СХДС": -0.15,
     },
@@ -407,9 +407,10 @@ def calculate_single_party_position(party_name, proposal):
     # 4. Proposer / coalition relation effect
     proposed_by_party = proposal.get("proposed_by_party")
     relation_score = 0.0
-
+    
     if proposed_by_party:
         relation_score = get_party_relation(party_name, proposed_by_party)
+
 
         # Base relation effect
         stance += relation_score * 0.25
@@ -610,7 +611,7 @@ def score_bot(bot, proposal):
     coalition_bonus = 0.0
 
     if proposed_by_party:
-        relation_score = get_party_relation(party, proposed_by_party)
+        relation_score = get_party_relation(party_name, proposed_by_party)
 
         # Coalition dynamics at MP level
         if relation_score >= 0.4:
@@ -681,7 +682,7 @@ def score_bot(bot, proposal):
             + relation_alignment * (RELATION_WEIGHT * 0.9)
             + coalition_bonus
             + randomness
-        )
+    )
 
     # --- NON-RATIONAL LAYERS ---
 
