@@ -164,12 +164,269 @@ PARTY_RELATIONS = {
         "Демократично Пустиняково": 0.15,
     },
 }
+PARTY_PROFILES = {
+    "ПКП-НН": {
+    "policy_profile": {
+        "social_progressive_traditionalist": 0.7,
+        "civil_rights": -0.5,
+        "economic_left_right": 0.2,
+        "security": 0.8,
+        "public_spending": 0.3,
+        "regional_development": 0.4,
+        "international_alignment": -0.2,
+    },
+    "salience_profile": {
+        "family_values": 0.7,
+        "civil_rights": 0.6,
+        "economy": 0.7,
+        "security": 1.0,
+        "infrastructure": 0.6,
+        "public_spending": 0.7,
+        "regional_development": 0.8,
+        "controversy": 0.8,
+        "public_support": 0.5,
+        "fiscal_impact": 0.7,
+        "international_alignment": 0.5,
+        "urgency": 0.8,
+    },
+    "strategy_profile": {
+        "public_support_sensitivity": 0.4,
+        "controversy_aversion": 0.9,
+        "urgency_responsiveness": 0.7,
+        "fiscal_sensitivity": 0.7,
+        "international_alignment_sensitivity": 0.4,
+        "compromise_willingness": 0.3,
+        "opposition_instinct": 0.6,
+        "governing_instinct": 1.0,
+    },
+},
 
+    "ГЕРП": {
+        "policy_profile": {
+            "social_progressive_traditionalist": 0.0,
+            "civil_rights": 0.0,
+            "economic_left_right": 0.0,
+            "security": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "international_alignment": 0.0,
+        },
+        "salience_profile": {
+            "family_values": 0.0,
+            "civil_rights": 0.0,
+            "economy": 0.0,
+            "security": 0.0,
+            "infrastructure": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "controversy": 0.0,
+            "public_support": 0.0,
+            "fiscal_impact": 0.0,
+            "international_alignment": 0.0,
+            "urgency": 0.0,
+        },
+        "strategy_profile": {
+            "public_support_sensitivity": 0.0,
+            "controversy_aversion": 0.0,
+            "urgency_responsiveness": 0.0,
+            "fiscal_sensitivity": 0.0,
+            "international_alignment_sensitivity": 0.0,
+            "compromise_willingness": 0.0,
+            "opposition_instinct": 0.0,
+            "governing_instinct": 0.0,
+        },
+    },
+
+    "Демократично Пустиняково": {
+        "policy_profile": {
+            "social_progressive_traditionalist": 0.0,
+            "civil_rights": 0.0,
+            "economic_left_right": 0.0,
+            "security": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "international_alignment": 0.0,
+        },
+        "salience_profile": {
+            "family_values": 0.0,
+            "civil_rights": 0.0,
+            "economy": 0.0,
+            "security": 0.0,
+            "infrastructure": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "controversy": 0.0,
+            "public_support": 0.0,
+            "fiscal_impact": 0.0,
+            "international_alignment": 0.0,
+            "urgency": 0.0,
+        },
+        "strategy_profile": {
+            "public_support_sensitivity": 0.0,
+            "controversy_aversion": 0.0,
+            "urgency_responsiveness": 0.0,
+            "fiscal_sensitivity": 0.0,
+            "international_alignment_sensitivity": 0.0,
+            "compromise_willingness": 0.0,
+            "opposition_instinct": 0.0,
+            "governing_instinct": 0.0,
+        },
+    },
+
+    "ДПС": {
+        "policy_profile": {
+            "social_progressive_traditionalist": 0.0,
+            "civil_rights": 0.0,
+            "economic_left_right": 0.0,
+            "security": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "international_alignment": 0.0,
+        },
+        "salience_profile": {
+            "family_values": 0.0,
+            "civil_rights": 0.0,
+            "economy": 0.0,
+            "security": 0.0,
+            "infrastructure": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "controversy": 0.0,
+            "public_support": 0.0,
+            "fiscal_impact": 0.0,
+            "international_alignment": 0.0,
+            "urgency": 0.0,
+        },
+        "strategy_profile": {
+            "public_support_sensitivity": 0.0,
+            "controversy_aversion": 0.0,
+            "urgency_responsiveness": 0.0,
+            "fiscal_sensitivity": 0.0,
+            "international_alignment_sensitivity": 0.0,
+            "compromise_willingness": 0.0,
+            "opposition_instinct": 0.0,
+            "governing_instinct": 0.0,
+        },
+    },
+
+    "СХДС": {
+        "policy_profile": {
+            "social_progressive_traditionalist": 0.0,
+            "civil_rights": 0.0,
+            "economic_left_right": 0.0,
+            "security": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "international_alignment": 0.0,
+        },
+        "salience_profile": {
+            "family_values": 0.0,
+            "civil_rights": 0.0,
+            "economy": 0.0,
+            "security": 0.0,
+            "infrastructure": 0.0,
+            "public_spending": 0.0,
+            "regional_development": 0.0,
+            "controversy": 0.0,
+            "public_support": 0.0,
+            "fiscal_impact": 0.0,
+            "international_alignment": 0.0,
+            "urgency": 0.0,
+        },
+        "strategy_profile": {
+            "public_support_sensitivity": 0.0,
+            "controversy_aversion": 0.0,
+            "urgency_responsiveness": 0.0,
+            "fiscal_sensitivity": 0.0,
+            "international_alignment_sensitivity": 0.0,
+            "compromise_willingness": 0.0,
+            "opposition_instinct": 0.0,
+            "governing_instinct": 0.0,
+        },
+    },
+}
 
 def get_party_relation(from_party, to_party):
     from_party = canonical_party_name(from_party)
     to_party = canonical_party_name(to_party)
     return PARTY_RELATIONS.get(from_party, {}).get(to_party, 0.0)
+
+def calculate_single_party_position(party_name, proposal):
+    profile = PARTY_PROFILES.get(party_name)
+    if not profile:
+        return 0.0
+
+    policy_profile = profile["policy_profile"]
+    salience_profile = profile["salience_profile"]
+    strategy_profile = profile["strategy_profile"]
+    effects = proposal.get("effects", {})
+
+    stance = 0.0
+
+    # 1. Core ideological / policy alignment
+    policy_dimensions = [
+        "social_progressive_traditionalist",
+        "civil_rights",
+        "economic_left_right",
+        "security",
+        "public_spending",
+        "regional_development",
+        "international_alignment",
+    ]
+
+    for dim in policy_dimensions:
+        proposal_value = effects.get(dim, 0.0)
+        party_value = policy_profile.get(dim, 0.0)
+        stance += proposal_value * party_value * 0.35
+
+    # 2. Issue salience effects
+    salience_mapping = {
+        "civil_rights": "civil_rights",
+        "economy": "economy",
+        "security": "security",
+        "infrastructure": "infrastructure",
+        "public_spending": "public_spending",
+        "regional_development": "regional_development",
+        "controversy": "controversy",
+        "public_support": "public_support",
+        "fiscal_impact": "fiscal_impact",
+        "international_alignment": "international_alignment",
+        "urgency": "urgency",
+    }
+
+    for effect_key, salience_key in salience_mapping.items():
+        proposal_value = effects.get(effect_key, 0.0)
+        salience_value = salience_profile.get(salience_key, 0.0)
+        stance += proposal_value * salience_value * 0.15
+
+    # 3. Strategic response modifiers
+    stance += effects.get("public_support", 0.0) * strategy_profile.get("public_support_sensitivity", 0.0) * 0.20
+    stance -= effects.get("controversy", 0.0) * strategy_profile.get("controversy_aversion", 0.0) * 0.20
+    stance += effects.get("urgency", 0.0) * strategy_profile.get("urgency_responsiveness", 0.0) * 0.15
+    stance += effects.get("fiscal_impact", 0.0) * strategy_profile.get("fiscal_sensitivity", 0.0) * 0.15
+    stance += effects.get("international_alignment", 0.0) * strategy_profile.get("international_alignment_sensitivity", 0.0) * 0.15
+
+    # 4. Proposer / party relation effect
+    proposed_by_party = proposal.get("proposed_by_party")
+    if proposed_by_party:
+        relation_score = get_party_relation(party_name, proposed_by_party)
+        stance += relation_score * 0.25
+
+    # 5. Governing/opposition instincts
+    stance += strategy_profile.get("governing_instinct", 0.0) * effects.get("urgency", 0.0) * 0.05
+    stance -= strategy_profile.get("opposition_instinct", 0.0) * effects.get("controversy", 0.0) * 0.05
+
+    return clamp(stance, -1.0, 1.0)
+def calculate_party_positions(proposal):
+    positions = {}
+
+    for party_name in PARTY_PROFILES.keys():
+        positions[party_name] = round(
+            calculate_single_party_position(party_name, proposal),
+            2
+        )
+
+    return positions
 
 # Helper to get unique party names in order of appearance
 def get_party_names(bots):
@@ -206,7 +463,7 @@ def score_bot(bot, proposal):
         yes_threshold = YES_THRESHOLD
         no_threshold = NO_THRESHOLD
 
-               # Hard party-line override for PM election
+        #Hard party-line override for PM election
         if party_pressure <= -0.95:
             loyalty_chance = 0.55 + discipline * 0.2
 
@@ -326,11 +583,10 @@ def score_bot(bot, proposal):
         ideology_score += proposal_pos * bot_pos
 
     party = canonical_party_name(bot.get("party", ""))
-    party_positions = proposal.get("party_positions", {})
-    normalized_party_positions = {
-        normalize(str(key)): value for key, value in party_positions.items()
-    }
-    party_pressure = normalized_party_positions.get(normalize(str(party)), 0.0)
+
+    # AUTO-CALCULATED PARTY POSITIONS FOR POLICY VOTING
+    party_positions = calculate_party_positions(proposal)
+    party_pressure = party_positions.get(party, 0.0)
 
     proposed_by_party = proposal.get("proposed_by_party")
     relation_score = 0.0
@@ -881,7 +1137,7 @@ if __name__ == "__main__":
         print(
             f"   Какво променя: {proposal.get('changes') or proposal.get('changes_summary') or 'Няма добавено описание на промените.'}")
         print(f"   Допълнителни характеристики: controversy={proposal.get('effects', {}).get('controversy', 0)}, public_support={proposal.get('effects', {}).get('public_support', 0)}, fiscal_impact={proposal.get('effects', {}).get('fiscal_impact', 0)}, international_alignment={proposal.get('effects', {}).get('international_alignment', 0)}, urgency={proposal.get('effects', {}).get('urgency', 0)}")
-    choice = input("\nВъведи номер на предложение за гласуване или натисни Enter за всички: ").strip()
+        choice = input("\nВъведи номер на предложение за гласуване или натисни Enter за всички: ").strip()
 
     if choice:
         selected_index = int(choice) - 1
@@ -890,7 +1146,15 @@ if __name__ == "__main__":
         proposals_to_run = proposals
 
     for proposal in proposals_to_run:
-        simulation_output = get_representative_vote(bots, proposal, n_runs=200, pass_threshold=33)
+        auto_positions = calculate_party_positions(proposal)
+
+        print("\nАвтоматично изчислени партийни позиции:")
+        for party, position in auto_positions.items():
+            print(f"{party}: {position}")
+
+        simulation_output = get_representative_vote(
+            bots, proposal, n_runs=200, pass_threshold=33
+        )
         results = simulation_output["results"]
         totals = simulation_output["totals"]
         party_totals = simulation_output["party_totals"]
@@ -900,7 +1164,8 @@ if __name__ == "__main__":
         print(f"ID на законопроекта: {proposal.get('bill_id', 'Няма ID')}")
         description = proposal.get("description") or "Няма добавено описание на законопроекта."
         changes_text = proposal.get("changes") or proposal.get(
-            "changes_summary") or "Няма добавено описание на промените."
+            "changes_summary"
+        ) or "Няма добавено описание на промените."
         print(f"За какво е законопроектът: {description}")
         print(f"Какво променя: {changes_text}")
         print(
@@ -911,11 +1176,14 @@ if __name__ == "__main__":
             f"international_alignment={proposal.get('effects', {}).get('international_alignment', 0)}, "
             f"urgency={proposal.get('effects', {}).get('urgency', 0)}\n"
         )
+
         for result in results:
             print(
                 f"{result['name']} ({result['party']}): "
                 f"{result['vote']} | резултат={result['score']} | "
-                f"партия={result['party_pressure']} | идеология={result['ideology_score']} | значимост={result['salience_score']} | отношение={result['relation_score']} | шум={result['randomness']} | прагове=({result['yes_threshold']},{result['no_threshold']}) | "
+                f"партия={result['party_pressure']} | идеология={result['ideology_score']} | "
+                f"значимост={result['salience_score']} | отношение={result['relation_score']} | "
+                f"шум={result['randomness']} | прагове=({result['yes_threshold']},{result['no_threshold']}) | "
                 f"обяснение={result['reason']}"
             )
 
@@ -927,7 +1195,6 @@ if __name__ == "__main__":
         print("\nГласуване по партии:")
         for party, counts in party_totals.items():
             print(f"{party}: ЗА={counts['YES']} | ПРОТИВ={counts['NO']} | ВЪЗДЪРЖАЛ СЕ={counts['ABSTAIN']}")
-
 
         generate_pdf_report(proposal, results, totals, party_totals, bill_passed)
         print("\nPDF докладът е създаден: parliament_report.pdf")
