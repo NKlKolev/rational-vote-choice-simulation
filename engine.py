@@ -167,16 +167,16 @@ PARTY_RELATIONS = {
 PARTY_PROFILES = {
     "ПКП-НН": {
         "policy_profile": {
-            "social_progressive_traditionalist": 0.7,
-            "civil_rights": -0.5,
-            "economic_left_right": 0.2,
-            "security": 0.8,
-            "public_spending": 0.3,
-            "regional_development": 0.4,
-            "international_alignment": -0.2,
+            "social_progressive_traditionalist": 0.9,
+            "civil_rights": -0.8,
+            "economic_left_right": -0.4,
+            "security": 0.95,
+            "public_spending": 0.5,
+            "regional_development": 0.6,
+            "international_alignment": -0.6,
         },
         "salience_profile": {
-            "family_values": 0.7,
+            "family_values": 0.8,
             "civil_rights": 0.6,
             "economy": 0.7,
             "security": 1.0,
@@ -184,17 +184,17 @@ PARTY_PROFILES = {
             "public_spending": 0.7,
             "regional_development": 0.8,
             "controversy": 0.8,
-            "public_support": 0.5,
+            "public_support": 0.0,
             "fiscal_impact": 0.7,
-            "international_alignment": 0.5,
+            "international_alignment": -0.5,
             "urgency": 0.8,
         },
         "strategy_profile": {
             "public_support_sensitivity": 0.4,
-            "controversy_aversion": 0.9,
+            "controversy_aversion": 0.2,
             "urgency_responsiveness": 0.7,
             "fiscal_sensitivity": 0.7,
-            "international_alignment_sensitivity": 0.4,
+            "international_alignment_sensitivity": 0.2,
             "compromise_willingness": 0.3,
             "opposition_instinct": 0.6,
             "governing_instinct": 1.0,
@@ -404,15 +404,34 @@ def calculate_single_party_position(party_name, proposal):
     stance += effects.get("fiscal_impact", 0.0) * strategy_profile.get("fiscal_sensitivity", 0.0) * 0.15
     stance += effects.get("international_alignment", 0.0) * strategy_profile.get("international_alignment_sensitivity", 0.0) * 0.15
 
-    # 4. Proposer / party relation effect
+    # 4. Proposer / coalition relation effect
     proposed_by_party = proposal.get("proposed_by_party")
+    relation_score = 0.0
+
     if proposed_by_party:
         relation_score = get_party_relation(party_name, proposed_by_party)
+
+        # Base relation effect
         stance += relation_score * 0.25
+
+        # Coalition reinforcement:
+        # strong allies/supporters move a bit more toward support,
+        # strong opponents move a bit more toward opposition
+        if relation_score >= 0.4:
+            stance += relation_score * 0.10
+        elif relation_score <= -0.4:
+            stance += relation_score * 0.10
 
     # 5. Governing/opposition instincts
     stance += strategy_profile.get("governing_instinct", 0.0) * effects.get("urgency", 0.0) * 0.05
     stance -= strategy_profile.get("opposition_instinct", 0.0) * effects.get("controversy", 0.0) * 0.05
+
+    # 6. Compromise dynamics
+    compromise = strategy_profile.get("compromise_willingness", 0.0)
+    uncertainty = 1.0 - min(abs(stance), 1.0)
+
+    # Pull uncertain positions toward the center
+    stance += (-stance) * compromise * uncertainty * 0.40
 
     return clamp(stance, -1.0, 1.0)
 def calculate_party_positions(proposal):
@@ -588,8 +607,16 @@ def score_bot(bot, proposal):
 
     proposed_by_party = proposal.get("proposed_by_party")
     relation_score = 0.0
+    coalition_bonus = 0.0
+
     if proposed_by_party:
         relation_score = get_party_relation(party, proposed_by_party)
+
+        # Coalition dynamics at MP level
+        if relation_score >= 0.4:
+            coalition_bonus = relation_score * 0.12
+        elif relation_score <= -0.4:
+            coalition_bonus = relation_score * 0.12
 
     if "civil_rights" in effects:
         civil_rights_salience = salience.get("civil_rights", 0.0)
@@ -652,7 +679,9 @@ def score_bot(bot, proposal):
             + party_line_effect * (PARTY_WEIGHT * 0.9)
             + salience_score * (SALIENCE_WEIGHT * 0.9)
             + relation_alignment * (RELATION_WEIGHT * 0.9)
+            + coalition_bonus
             + randomness
+        )
     )
 
     # --- NON-RATIONAL LAYERS ---
@@ -672,6 +701,17 @@ def score_bot(bot, proposal):
     corruption_push = effects.get("fiscal_impact", 0.0) * corruption * 0.3
     total_score += corruption_push
 
+    total_score = clamp(total_score)
+    # --- COMPROMISE EFFECT ---
+    compromise = bot.get("opportunism", 0.25) * 0.0  # placeholder, not used directly
+    party_profile = PARTY_PROFILES.get(party, {})
+    strategy_profile = party_profile.get("strategy_profile", {})
+    compromise_willingness = strategy_profile.get("compromise_willingness", 0.0)
+
+    score_uncertainty = 1.0 - min(abs(total_score), 1.0)
+
+    # Pull borderline votes toward the center for compromise-prone parties
+    total_score += (-total_score) * compromise_willingness * score_uncertainty * 0.30
     total_score = clamp(total_score)
     # --- PARTY FRACTURE EFFECT ---
 
@@ -711,6 +751,7 @@ def score_bot(bot, proposal):
             "salience_score": round(salience_score, 3),
             "relation_score": round(relation_score, 3),
             "randomness": round(randomness, 3),
+            "coalition_bonus": round(coalition_bonus, 3),
             "yes_threshold": round(yes_threshold, 3),
             "no_threshold": round(no_threshold, 3)
             }
@@ -770,6 +811,7 @@ def score_bot(bot, proposal):
         "salience_score": round(salience_score, 3),
         "relation_score": round(relation_score, 3),
         "randomness": round(randomness, 3),
+        "coalition_bonus": round(coalition_bonus, 3),
 
         "yes_threshold": round(yes_threshold, 3),
         "no_threshold": round(no_threshold, 3)
@@ -1135,7 +1177,7 @@ if __name__ == "__main__":
         print(
             f"   Какво променя: {proposal.get('changes') or proposal.get('changes_summary') or 'Няма добавено описание на промените.'}")
         print(f"   Допълнителни характеристики: controversy={proposal.get('effects', {}).get('controversy', 0)}, public_support={proposal.get('effects', {}).get('public_support', 0)}, fiscal_impact={proposal.get('effects', {}).get('fiscal_impact', 0)}, international_alignment={proposal.get('effects', {}).get('international_alignment', 0)}, urgency={proposal.get('effects', {}).get('urgency', 0)}")
-        choice = input("\nВъведи номер на предложение за гласуване или натисни Enter за всички: ").strip()
+    choice = input("\nВъведи номер на предложение за гласуване или натисни Enter за всички: ").strip()
 
     if choice:
         selected_index = int(choice) - 1
