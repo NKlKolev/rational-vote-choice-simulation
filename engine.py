@@ -309,7 +309,7 @@ PARTY_PROFILES = {
     },
     "СХДС": {
         "policy_profile": {
-            "social_progressive_traditionalist": -0.6,
+            "social_progressive_traditionalist": 1.0,
             "civil_rights": 0.8,
             "economic_left_right": -0.3,
             "security": 0.2,
