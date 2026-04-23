@@ -184,9 +184,10 @@ if st.button("Пусни гласуване"):
     progress_text = st.empty()
     progress_bar = st.progress(0)
 
+
     def update_progress(current_step, total_steps):
         progress_text.write(f"Гласуване... {current_step}/{total_steps}")
-        progress_bar.progress(current_step / total_steps)
+        progress_bar.progress(min(current_step / total_steps, 1.0))
 
     if proposal_type == "policy":
         if party_position_mode == "Автоматично":
