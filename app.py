@@ -22,7 +22,8 @@ else:
     bots = load_json("data/bots.json")
     st.warning("Заредени членове на Върховния Конгрес от JSON: data/bots.json")
 
-st.write(f"Общ брой членове на Върховния Конгрес: {len(bots)}")
+TOTAL_SEATS = 120
+st.write(f"Общ брой членове на Върховния Конгрес: {len(bots)} / {TOTAL_SEATS}")
 
 with st.expander("Покажи заредените членове на Върховния Конгрес"):
     for bot in bots:
@@ -146,6 +147,8 @@ else:
 
 st.divider()
 
+pass_threshold = 61
+
 if st.button("Пусни гласуване"):
     proposal = {
         "title": title,
@@ -176,6 +179,8 @@ if st.button("Пусни гласуване"):
             "urgency": urgency
         }
 
+    st.write(f"Необходими гласове за приемане: {pass_threshold} от {TOTAL_SEATS}")
+
     progress_text = st.empty()
     progress_bar = st.progress(0)
 
@@ -200,7 +205,7 @@ if st.button("Пусни гласуване"):
         bots,
         proposal,
         n_runs=100,
-        pass_threshold=33,
+        pass_threshold=pass_threshold,
         progress_callback=update_progress
     )
 
@@ -209,7 +214,7 @@ if st.button("Пусни гласуване"):
     party_totals = simulation_output["party_totals"]
     bill_passed = simulation_output["bill_passed"]
 
-    progress_text.write("Гласуването приключи: 65/65")
+    progress_text.write(f"Гласуването приключи: {len(bots)}/{TOTAL_SEATS}")
     progress_bar.progress(1.0)
 
     st.subheader("Резултат")
@@ -264,7 +269,7 @@ if st.button("Пусни гласуване"):
     votes = [result["vote"] for result in results]
     colors = [vote_colors.get(vote, "gray") for vote in votes]
 
-    n_cols = 13
+    n_cols = 15
     x = []
     y = []
 
