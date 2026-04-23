@@ -186,7 +186,7 @@ if st.button("Пусни гласуване"):
 
 
     def update_progress(current_step, total_steps):
-        progress_text.write(f"Гласуване... {current_step}/{total_steps}")
+        progress_text.write(f"Гласуване... {current_step}/120")
         progress_bar.progress(min(current_step / total_steps, 1.0))
 
     if proposal_type == "policy":
