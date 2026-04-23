@@ -122,7 +122,27 @@ if proposal_type == "policy":
         )
 
 st.subheader("Позиции на партиите")
-st.caption("Партийните позиции ще бъдат изчислени автоматично от системата.")
+party_position_mode = st.radio(
+    "Режим за позициите на партиите",
+    ["Автоматично", "Ръчно"],
+    horizontal=True
+)
+
+manual_party_positions = {}
+
+if party_position_mode == "Автоматично":
+    st.caption("Партийните позиции ще бъдат изчислени автоматично от системата.")
+else:
+    st.caption("Задай ръчно позициите на партиите.")
+    party_cols = st.columns(min(3, len(party_names)) if party_names else 1)
+
+    for i, party in enumerate(party_names):
+        with party_cols[i % len(party_cols)]:
+            manual_party_positions[party] = st.slider(
+                party,
+                -1.0, 1.0, 0.0, 0.05,
+                key=f"party_{party}"
+            )
 
 st.divider()
 
@@ -162,14 +182,20 @@ if st.button("Пусни гласуване"):
     def update_progress(current_step, total_steps):
         progress_text.write(f"Гласуване... {current_step}/{total_steps}")
         progress_bar.progress(current_step / total_steps)
-   
-    auto_positions = calculate_party_positions(proposal)
-    proposal["party_positions"] = auto_positions
 
-    st.subheader("Автоматично изчислени партийни позиции")
-    for party, position in auto_positions.items():
-        st.write(f"{party}: {position}")
-    
+    if proposal_type == "policy":
+        if party_position_mode == "Автоматично":
+            proposal["party_positions"] = calculate_party_positions(proposal)
+            st.subheader("Автоматично изчислени партийни позиции")
+        else:
+            proposal["party_positions"] = manual_party_positions
+            st.subheader("Ръчно зададени партийни позиции")
+
+        for party, position in proposal["party_positions"].items():
+            st.write(f"{party}: {position}")
+    else:
+        proposal["party_positions"] = {}
+
     simulation_output = get_representative_vote(
         bots,
         proposal,
