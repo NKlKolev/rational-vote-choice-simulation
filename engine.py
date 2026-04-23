@@ -666,10 +666,10 @@ def score_bot(bot, proposal):
     controversy = abs(effects.get("controversy", 0.0))
 
     relation_alignment = relation_score * (0.7 + discipline * 0.3)
-    party_line_effect = party_pressure * (0.55 + discipline * 0.45)
+    party_line_effect = party_pressure * (0.65 + discipline * 0.50)
 
     # Increased randomness baseline and scaling
-    random_scale = 0.18 + controversy * 0.15
+    random_scale = 0.18 + controversy * 0.10
 
     # More randomness when party signals are weak
     if abs(party_pressure) <= 0.2:
@@ -680,7 +680,7 @@ def score_bot(bot, proposal):
         random_scale += 0.05
 
     # Stronger stochastic behavior (non-linear)
-    randomness = random.uniform(-1, 1) * (rebellion * random_scale * 1.5)
+    randomness = random.uniform(-1, 1) * (rebellion * random_scale * (1.2 - discipline))
 
     # Slightly reduce deterministic dominance, increase randomness influence
     total_score = (
@@ -701,7 +701,7 @@ def score_bot(bot, proposal):
 
     # 2. Opportunistic flips (strategic hypocrisy)
     opportunism = bot.get("opportunism", 0.25)
-    if random.random() < opportunism * 0.3:
+    if random.random() < opportunism * 0.15:
         total_score *= -0.5
 
     # 3. Corruption / material incentives
@@ -723,7 +723,7 @@ def score_bot(bot, proposal):
     total_score = clamp(total_score)
     # --- PARTY FRACTURE EFFECT ---
 
-    faction_noise = random.uniform(-1, 1) * bot.get("rebellion", 0.2) * 0.35
+    faction_noise = random.uniform(-1, 1) * bot.get("rebellion", 0.2) * 0.20
 
     # stronger fractures when party pressure is high (rebels react)
     if abs(party_pressure) > 0.6:
