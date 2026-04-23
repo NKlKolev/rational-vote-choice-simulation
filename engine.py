@@ -666,7 +666,7 @@ def score_bot(bot, proposal):
     controversy = abs(effects.get("controversy", 0.0))
 
     relation_alignment = relation_score * (0.7 + discipline * 0.3)
-    party_line_effect = party_pressure * (0.65 + discipline * 0.50)
+    party_line_effect = party_pressure * (0.90 + discipline * 0.70)
 
     # Increased randomness baseline and scaling
     random_scale = 0.18 + controversy * 0.10
