@@ -515,6 +515,8 @@ def score_bot(bot, proposal):
                 "no_threshold": round(no_threshold, 3)
             }
 
+
+
         if party_pressure <= -0.9 and discipline >= 0.65:
             vote = "NO"
             reason = "партията твърдо се противопоставя на кандидата за министър-председател"
@@ -611,7 +613,12 @@ def score_bot(bot, proposal):
     party = canonical_party_name(bot.get("party", ""))
 
     # AUTO-CALCULATED PARTY POSITIONS FOR POLICY VOTING
-    party_positions = calculate_party_positions(proposal)
+    # USE MANUAL if available, otherwise fallback to auto
+    if proposal.get("party_positions"):
+        party_positions = proposal["party_positions"]
+    else:
+        party_positions = calculate_party_positions(proposal)
+
     party_pressure = party_positions.get(party, 0.0)
 
     proposed_by_party = proposal.get("proposed_by_party")
