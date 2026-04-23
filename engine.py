@@ -53,7 +53,10 @@ def as_float(value, default=0.0):
     if value is None or value == "":
         return default
     return float(value)
+    if isinstance(value, str):
+        value = value.strip().replace(",", ".")
 
+    return float(value)
 
 def load_bots_from_excel(path):
     wb = openpyxl.load_workbook(path, data_only=True)
@@ -891,9 +894,10 @@ def get_representative_vote(bots, proposal, n_runs=100, pass_threshold=33, progr
         })
 
         if progress_callback:
-            displayed_step = min(65, max(1, int(((i + 1) / n_runs) * 65)))
-            progress_callback(displayed_step, 65)
-            time.sleep(0.03)
+            display_total = 120
+            displayed_step = min(display_total, max(1, int(((i + 1) / n_runs) * display_total)))
+            progress_callback(displayed_step, display_total)
+            time.sleep(0.05)
 
     # Split simulations into PASS / FAIL groups
     passed_runs = [sim for sim in simulations if sim["bill_passed"]]
